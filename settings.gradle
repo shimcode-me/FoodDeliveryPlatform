@@ -1,0 +1,4 @@
+rootProject.name = 'FoodDeliveryPlatform'
+include 'user-service'
+include 'restaurant-service'
+include 'order-service'

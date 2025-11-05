@@ -1,0 +1,43 @@
+services:
+  postgres-user:
+    image: postgres:latest
+    container_name: postgres-user
+    environment:
+      POSTGRES_DB: user_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5433:5432"
+    volumes:
+      - fooddeliveryplatform_postgres_user_data:/var/lib/postgresql
+    restart: unless-stopped
+
+  postgres-restaurant:
+    image: postgres:latest
+    container_name: postgres-restaurant
+    environment:
+      POSTGRES_DB: restaurant_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5434:5432"
+    volumes:
+      - fooddeliveryplatform_postgres_restaurant_data:/var/lib/postgresql
+    restart: unless-stopped
+
+  postgres-order:
+    image: postgres:latest
+    container_name: postgres-order
+    environment:
+      POSTGRES_DB: order_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5435:5432"
+    volumes:
+      - fooddeliveryplatform_postgres_order_data:/var/lib/postgresql
+    restart: unless-stopped
+volumes:
+  fooddeliveryplatform_postgres_user_data:
+  fooddeliveryplatform_postgres_restaurant_data:
+  fooddeliveryplatform_postgres_order_data:
