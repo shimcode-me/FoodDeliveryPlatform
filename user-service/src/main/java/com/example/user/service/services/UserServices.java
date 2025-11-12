@@ -2,8 +2,11 @@ package com.example.user.service.services;
 
 import com.example.user.service.dto.UserRequestDto;
 import com.example.user.service.dto.UserResponseDto;
+import com.example.user.service.dto.request.AddressRequestDto;
+import com.example.user.service.entities.Addresses;
 import com.example.user.service.entities.Users;
 import com.example.user.service.mapper.UserMapper;
+import com.example.user.service.repositories.AddressesRepositories;
 import com.example.user.service.repositories.UsersRepositories;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,22 +29,22 @@ public class UserServices {
 
     public UserResponseDto createUser(UserRequestDto dto) {
         Users user = userMapper.toEntity(dto);
-        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+        user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
-        return userMapper.toDTO(usersRepositories.save(user));
+        return userMapper.toDto(usersRepositories.save(user));
     }
 
     public List<UserResponseDto> getAllUsers() {
         return usersRepositories.findAll()
                 .stream()
-                .map(userMapper::toDTO)
+                .map(userMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     public UserResponseDto getUserById(Long id) {
         return usersRepositories.findById(id)
-                .map(userMapper::toDTO)
+                .map(userMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
@@ -52,14 +56,28 @@ public class UserServices {
                     if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
                         user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
                     }
-                    /*user.setRoleId(dto.getRoleId());
-                    user.setAddressId(dto.getAddressId());*/
+
                     user.setUpdatedAt(LocalDateTime.now());
-                    return userMapper.toDTO(usersRepositories.save(user));
+                    return userMapper.toDto(usersRepositories.save(user));
                 }).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     public void deleteUser(Long id) {
         usersRepositories.deleteById(id);
     }
+
+    private final AddressesRepositories addressesRepositories;
+
+    public UserResponseDto addAddresses(Long userId, Set<AddressRequestDto> addressDtos) {
+        Users user = usersRepositories.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Set<Addresses> addresses = addressDtos.stream()
+                .map(dto -> userMapper.toAddressEntity(dto, user))
+                .collect(Collectors.toSet());
+
+        addressesRepositories.saveAll(addresses);
+        return userMapper.toDto(user);
+    }
+
 }

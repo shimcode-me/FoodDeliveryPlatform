@@ -23,7 +23,7 @@
 
     <addForeignKeyConstraint baseTableName="address" baseColumnNames="user_id"
                              constraintName="fk_address_user"
-                             referencedTableName="user"
+                             referencedTableName="users"
                              referencedColumnNames="id"
                              onDelete="CASCADE"/>
 

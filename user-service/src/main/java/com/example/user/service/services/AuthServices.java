@@ -28,7 +28,7 @@ public class AuthServices {
 
         Users user = userMapper.toEntity(dto);
         user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
-        return userMapper.toDTO(usersRepositories.save(user));
+        return userMapper.toDto(usersRepositories.save(user));
     }
 
     public LoginResponseDto login(LoginRequestDto dto) {

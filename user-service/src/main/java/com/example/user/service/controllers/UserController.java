@@ -2,12 +2,14 @@ package com.example.user.service.controllers;
 
 import com.example.user.service.dto.UserRequestDto;
 import com.example.user.service.dto.UserResponseDto;
+import com.example.user.service.dto.request.AddressRequestDto;
 import com.example.user.service.services.UserServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/users")
@@ -41,4 +43,13 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/addresses")
+    public ResponseEntity<UserResponseDto> addAddress(
+            @PathVariable Long id,
+            @RequestBody Set<AddressRequestDto> addresses
+    ) {
+        return ResponseEntity.ok(userService.addAddresses(id, addresses));
+    }
+
 }

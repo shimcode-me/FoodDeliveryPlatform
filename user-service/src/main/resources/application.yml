@@ -18,5 +18,5 @@ spring:
     enabled: true
 
 jwt:
-  secret: supersecretkeysupersecretkeysupersecretkey
-  expiration: 3600000
+  secret: MySuperSecretKeyThatShouldBeLongEnough
+  expiration: 86400000

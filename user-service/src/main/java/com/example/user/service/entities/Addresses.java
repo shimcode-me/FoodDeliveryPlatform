@@ -31,7 +31,7 @@ public class Addresses {
     @Column(length = 255)
     private String country;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 }
